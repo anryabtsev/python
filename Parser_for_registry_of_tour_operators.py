@@ -272,8 +272,7 @@ def form_list(toperators):
                     
     df.to_csv('testWING1.csv', encoding='utf-8', index=False)
     return df
-    #saveEXCEL(df, 'todayTEST')    
-
+    
     
 def saveCSV(df, OutputFile):
     df.to_csv(f'{OutputFile}.csv', encoding='utf-8', index=False)
@@ -285,54 +284,54 @@ def saveEXCEL(df, OutputFile):
     writer.save()     
 
     
-#def saveXML(df, OutputFile):
-    #root = etree.Element('Operators_list')
+def saveXML(df, OutputFile):
+    root = etree.Element('Operators_list')
     
-    #for row in df.iterrows():    
-        #Operator = etree.SubElement(root, 'Operator') 
-        #item_title = etree.SubElement(Operator, 'item_title')    
-        #name = etree.SubElement(Operator, 'name')  
-        #url = etree.SubElement(Operator, 'url')
-        #additional_url = etree.SubElement(Operator, 'additional_url')
-        #INN = etree.SubElement(Operator, 'INN')
-        #OGRN = etree.SubElement(Operator, 'OGRN')
-        #authenticity = etree.SubElement(Operator, 'authenticity')        
-        #status = etree.SubElement(Operator, 'status')
+    for row in df.iterrows():    
+        Operator = etree.SubElement(root, 'Operator') 
+        item_title = etree.SubElement(Operator, 'item_title')    
+        name = etree.SubElement(Operator, 'name')  
+        url = etree.SubElement(Operator, 'url')
+        additional_url = etree.SubElement(Operator, 'additional_url')
+        INN = etree.SubElement(Operator, 'INN')
+        OGRN = etree.SubElement(Operator, 'OGRN')
+        authenticity = etree.SubElement(Operator, 'authenticity')        
+        status = etree.SubElement(Operator, 'status')
         
-        #item_title.text = str(row[1]['item_title'])
-        #name.text = str(row[1]['name'])
-        #url.text = str(row[1]['url'])
-        #additional_url.text = str(row[1]['additional_url'])
-        #INN.text = str(row[1]['INN'])
-        #OGRN.text = str(row[1]['OGRN'])
-        #authenticity.text = str(row[1]['authenticity'])
-        #status.text = str(row[1]['status']) 
+        item_title.text = str(row[1]['item_title'])
+        name.text = str(row[1]['name'])
+        url.text = str(row[1]['url'])
+        additional_url.text = str(row[1]['additional_url'])
+        INN.text = str(row[1]['INN'])
+        OGRN.text = str(row[1]['OGRN'])
+        authenticity.text = str(row[1]['authenticity'])
+        status.text = str(row[1]['status']) 
         
-        #handle = etree.tostring(root, pretty_print=True, encoding='utf8', xml_declaration=True).decode('utf8')
+        handle = etree.tostring(root, pretty_print=True, encoding='utf8', xml_declaration=True).decode('utf8')
                 
-    #with open(f'{OutputFile}.xml', 'w', newline=None, encoding='utf8') as f:
-        #f.write(handle) 
-        #f.close()
+    with open(f'{OutputFile}.xml', 'w', newline=None, encoding='utf8') as f:
+        f.write(handle) 
+        f.close()
         
         
-#def saveXML_attribute_style(df, OutputFile):
-    #root = etree.Element('Operators_list')
+def saveXML_attribute_style(df, OutputFile):
+    root = etree.Element('Operators_list')
     
-    #for row in df.iterrows():
-        #Operator = etree.Element("Operator")
-        #Operator.set('item_title', str(row[1]['item_title']))
-        #Operator.set('name', str(row[1]['name']))
-        #Operator.set('url', str(row[1]['url']))
-        #Operator.set('additional_url', str(row[1]['additional_url']))
-        #Operator.set('INN', str(row[1]['INN']))
-        #Operator.set('OGRN', str(row[1]['OGRN']))
-        #Operator.set('authenticity', str(row[1]['authenticity']))
-        #Operator.set('status', str(row[1]['status']))
-        #root.append(Operator)
-        #handle = etree.tostring(root, pretty_print=True, encoding='utf8', xml_declaration=True).decode('utf8')
+    for row in df.iterrows():
+        Operator = etree.Element("Operator")
+        Operator.set('item_title', str(row[1]['item_title']))
+        Operator.set('name', str(row[1]['name']))
+        Operator.set('url', str(row[1]['url']))
+        Operator.set('additional_url', str(row[1]['additional_url']))
+        Operator.set('INN', str(row[1]['INN']))
+        Operator.set('OGRN', str(row[1]['OGRN']))
+        Operator.set('authenticity', str(row[1]['authenticity']))
+        Operator.set('status', str(row[1]['status']))
+        root.append(Operator)
+        handle = etree.tostring(root, pretty_print=True, encoding='utf8', xml_declaration=True).decode('utf8')
                 
-    #with open(f'{OutputFile}.xml', 'w', newline=None, encoding='utf8') as f:
-        #f.write(handle) 
+    with open(f'{OutputFile}.xml', 'w', newline=None, encoding='utf8') as f:
+        f.write(handle) 
 
 def split_urls(row):
     if ', ' in row[1]['url']:
@@ -384,102 +383,46 @@ def count_operators_on_page(soup):
 
         
 def main():
+    print('How to save: press "0" for CSV, press "1" for EXCEL, press "2" for BOTH')
+    saver = input()
+    if (saver != '0') & (saver != '1') & (saver != '2'):
+        print('Please, be more careful next time and press "0" for CSV, press "1" for EXCEL or press "2" for BOTH')
+        exit()        
+    print('Enter the name of the file without filename extension (e.g. MyFile)')
+    OutputFile = input()
     
+    ## Parsing
     driver = init_driver()
     get_list(driver) 
     driver.quit()
-    get_additional_info(toperators)    
-    df = form_list(toperators)
-    #saveXML_attribute_style(df, "XMLtest")
-    #saveCSV(df)
-
-      
+    get_url(toperators)
     
-    #with open('NewTest.csv', 'w', newline=None, encoding='utf8') as f:
-        #writer = csv.writer(f)
-        #writer.writerow(Operator._fields)
-        #writer.writerows(toperators) 
-        
-    
-    
-    #print('How to save: press "0" for CSV, press "1" for EXCEL, press "2" for BOTH')
-    #saver = input()
-    #if (saver != '0') & (saver != '1') & (saver != '2'):
-        #print('Please, be more careful next time and press "0" for CSV, press "1" for EXCEL or press "2" for BOTH')
-        #exit()        
-    #print('Enter the name of the file without filename extension (e.g. MyFile)')
-    #OutputFile = input()
-    
-    ## Parsing
-    #driver = init_driver()
-    #get_list(driver) 
-    #driver.quit()
-    #get_url(toperators)
-    
-    #if (saver == '0') or (saver == '2'):
+    if (saver == '0') or (saver == '2'):
         ## Save CSV
-        #saveCSV(df, OutputFile)
-        #if (saver == '2'):
+        saveCSV(df, OutputFile)
+        if (saver == '2'):
             ## Save EXCEL    
-            #saveEXCEL(df, OutputFile)
-    #else:
+            saveEXCEL(df, OutputFile)
+    else:
         ## Save EXCEL        
-        #saveEXCEL(df, OutputFile)        
+        saveEXCEL(df, OutputFile)        
         
     
-    #print('Do you want to count approximate number of operators without URL? Press "Y"/"N" for Yes/No')
-    #answer = input()
+    print('Do you want to count approximate number of operators without URL? Press "Y"/"N" for Yes/No')
+    answer = input()
     
-    #if (answer == 'Y') or (answer == 'y'):
-        #k = 0
-        #count_of_none_url_operators = 0
-        #while k < len(toperators):
-            #textik = str(toperators[k].url)
-            #if (textik.find('.') != -1) or (textik.find('www.') != -1) or (textik.find('.ru') != -1) or (textik.find('.com') != -1) or (textik.find('.org') != -1):
-                #k += 1            
-            #else:
-                #count_of_none_url_operators += 1
-                #k += 1  
-        #print(f'Number of operators without URL = {count_of_none_url_operators}') 
+    if (answer == 'Y') or (answer == 'y'):
+        k = 0
+        count_of_none_url_operators = 0
+        while k < len(toperators):
+            textik = str(toperators[k].url)
+            if (textik.find('.') != -1) or (textik.find('www.') != -1) or (textik.find('.ru') != -1) or (textik.find('.com') != -1) or (textik.find('.org') != -1):
+                k += 1            
+            else:
+                count_of_none_url_operators += 1
+                k += 1  
+        print(f'Number of operators without URL = {count_of_none_url_operators}') 
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#import pandas as pd
-
-#df = pd.read_csv('Operators_data.csv')
-
-#for i in range(len(df)):
-    #if ',' in df.loc[i, 'url']:
-        #for j in range(len(domains_df)):
-            #if f",{domains_df.loc[j, 'name'].split('.')[1]}" in df.loc[i, 'url']:
-                #df.loc[i, 'url'] = df.loc[i, 'url'].replace(',', '.')
-        #print(df.loc[i, 'url'])  
-        
-#for i in range(len(df)):
-    #if ', ' in df.loc[i, 'url']:
-        #df.loc[i, 'additional_url'] = df.loc[i, 'url'].split(', ')[1]
-        #df.loc[i, 'url'] = df.loc[i, 'url'].split(', ')[0]
-        
-        
-        
-        
+    
